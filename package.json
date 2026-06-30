@@ -2,8 +2,16 @@
   "name": "ai-reception-lite",
   "version": "0.1.0",
   "private": false,
-  "description": "Open-source AI receptionist MVP for small-business lead capture, qualification, and follow-up.",
+  "description": "Self-contained portfolio mockup of an AI receptionist for small-business lead capture, qualification, and follow-up.",
   "license": "MIT",
+  "keywords": [
+    "ai-receptionist",
+    "portfolio",
+    "nextjs",
+    "sqlite",
+    "lead-capture",
+    "dashboard"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",

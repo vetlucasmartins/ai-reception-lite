@@ -1,29 +1,49 @@
 # AI Reception Lite
 
-AI Reception Lite is a portfolio-friendly mockup of an AI receptionist for small
-businesses. It captures website leads, classifies them with a local heuristic
-"AI" mock, creates follow-up tasks, and shows the workflow in a dashboard.
+AI Reception Lite is a self-contained portfolio mockup of an AI receptionist for
+small businesses. It captures public enquiries, classifies lead intent with a
+local heuristic "AI" mock, creates follow-up tasks, and presents the result in a
+clean dashboard.
 
-The project is intentionally self-contained for GitHub review: no Supabase,
-OpenAI, n8n, paid APIs, or secrets are required.
+The goal of this repository is simple: let someone clone it, run it, understand
+the product idea, and review the implementation without needing Supabase,
+OpenAI, n8n, paid APIs, or secrets.
 
-## Stack
+## What It Demonstrates
 
-- Next.js App Router
-- React Server Components for dashboard reads
-- Local SQLite demo storage through Node's built-in `node:sqlite`
-- Zod validation for public forms and server actions
-- Playwright and Vitest tests
-- Tailwind CSS
+- A public lead capture flow at `/contact`
+- Demo login for reviewing the private dashboard
+- Lead temperature, status, summary, and suggested next action
+- Lead detail pages with conversation history and mock AI classification
+- Business settings for services, tone of voice, and opening hours
+- Local SQLite persistence through Node's built-in `node:sqlite`
+- Validation, tests, and documentation suitable for an open-source portfolio
 
-## Features
+## Product Story
 
-- Public lead capture form at `/contact`
-- Demo login with an httpOnly cookie
-- Seeded dashboard data so the app is visible immediately
-- SQLite persistence in `.data/ai-reception-lite.sqlite`
-- Local heuristic lead classification with safe fallback
-- Lead detail page with conversations, classification, and follow-up tasks
+Small businesses often receive website enquiries but lose momentum because the
+next follow-up is unclear. AI Reception Lite turns a raw contact request into a
+small, reviewable workflow:
+
+1. A visitor submits a service request.
+2. The app stores the lead locally.
+3. A deterministic mock classifier assigns temperature and next action.
+4. The dashboard makes hot leads and follow-up tasks easy to scan.
+5. The lead detail page explains what happened and what to do next.
+
+This is intentionally a portfolio-grade MVP, not a production CRM.
+
+## Tech Stack
+
+| Area | Choice |
+| --- | --- |
+| Framework | Next.js App Router |
+| UI | React, Tailwind CSS, lucide-react |
+| Data | Local SQLite via Node `node:sqlite` |
+| Validation | Zod |
+| Tests | Vitest, Playwright |
+| Auth | Demo-only httpOnly cookie |
+| AI | Deterministic local heuristic mock |
 
 ## Quick Start
 
@@ -41,10 +61,22 @@ Demo login:
 demo@aireception.local / demo-password
 ```
 
-The email/password are presentation-only. This is a mock portfolio app, not a
-production authentication system.
+The credentials are presentation-only. This app does not implement production
+authentication.
+
+## Demo Routes
+
+| Route | Purpose |
+| --- | --- |
+| `/contact` | Public lead capture form |
+| `/login` | Demo dashboard login |
+| `/dashboard` | Lead pipeline, filters, and summary cards |
+| `/leads/[id]` | Lead detail, conversation, classification, and tasks |
+| `/settings` | Business profile and public form link |
 
 ## Environment
+
+The default environment is local and secret-free:
 
 ```bash
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -53,7 +85,7 @@ AI_RECEPTION_DB_PATH=.data/ai-reception-lite.sqlite
 DEMO_AUTH_ENABLED=true
 ```
 
-Delete `.data/ai-reception-lite.sqlite` to reset the local demo database.
+Delete `.data/ai-reception-lite.sqlite` to reset the seeded demo database.
 
 ## Validation
 
@@ -63,27 +95,44 @@ npm run typecheck
 npm run test
 npm run test:e2e
 npm run build
-npm audit --audit-level=moderate
 ```
 
-## Documentation
+`npm run test:e2e` starts the Next.js dev server and runs the public
+lead-to-dashboard Playwright flow on desktop and mobile projects.
+
+## Repository Guide
 
 - [Setup](docs/SETUP.md)
+- [Product Spec](docs/PRODUCT_SPEC.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [API](docs/API.md)
 - [AI Pipeline](docs/AI_PIPELINE.md)
 - [Data Model](docs/DATA_MODEL.md)
 - [Security](SECURITY.md)
+- [Contributing](CONTRIBUTING.md)
 
 ## Security Posture
 
-This app is safe-by-default for an open repository because it does not need real
-credentials. Public input is validated, generated SQLite files are ignored, and
-the demo auth flow is clearly scoped to portfolio use.
+This repository is designed to be safe to publish:
+
+- no real API keys or service-role credentials
+- no external workflow secrets
+- ignored local SQLite files
+- Zod validation at public input boundaries
+- generic API error responses
+- demo auth clearly scoped to portfolio use
+
+See [SECURITY.md](SECURITY.md) for the full security notes.
 
 ## Known Limits
 
 - SQLite storage is local to the running machine or server instance.
-- Demo auth is not real user authentication.
-- The AI classification is a deterministic heuristic mock.
+- Demo auth is not real account security.
+- The classifier is deterministic and local, not an LLM integration.
 - Rate limiting is in-memory and suitable only for demo traffic.
+- The app should not be used for real customer data without replacing the demo
+  auth, persistence, authorization, and AI layers.
+
+## License
+
+MIT
