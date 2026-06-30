@@ -31,11 +31,7 @@ export async function GET(request: Request) {
 
     return success({
       items: data.items,
-      pagination: {
-        page: 1,
-        pageSize: data.items.length,
-        total: data.total
-      }
+      total: data.total
     });
   } catch {
     return failure("INTERNAL_ERROR", "Could not load leads.", 500);

@@ -30,19 +30,51 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     q: params.q
   });
   const hotCount = result.items.filter((lead) => lead.temperature === "hot").length;
+  const warmCount = result.items.filter((lead) => lead.temperature === "warm").length;
+  const activeCount = result.items.filter((lead) =>
+    lead.status === "new" || lead.status === "open"
+  ).length;
+  const classifiedCount = result.items.filter(
+    (lead) => lead.temperature !== "unclassified"
+  ).length;
+  const summaryCards = [
+    {
+      label: "Visible leads",
+      value: result.total,
+      detail: "Current filtered pipeline"
+    },
+    {
+      label: "Hot",
+      value: hotCount,
+      detail: "Needs fast follow-up",
+      tone: "text-red-700"
+    },
+    {
+      label: "Warm",
+      value: warmCount,
+      detail: "Pricing or timing signal",
+      tone: "text-amber-700"
+    },
+    {
+      label: "Active",
+      value: activeCount,
+      detail: `${classifiedCount} classified by the demo model`,
+      tone: "text-teal-700"
+    }
+  ];
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase text-teal-700">Dashboard</p>
-          <h1 className="mt-2 text-3xl font-semibold text-ink">Leads</h1>
+          <p className="eyebrow">Dashboard</p>
+          <h1 className="mt-2 text-3xl font-semibold text-ink">Lead pipeline</h1>
           <p className="mt-2 text-base text-slate-600">
-            {result.total} total leads, {hotCount} marked hot.
+            {result.total} visible leads, {hotCount} marked hot.
           </p>
         </div>
         <Link
-          className="focus-ring inline-flex min-h-11 w-fit items-center gap-2 rounded-md bg-ink px-4 text-sm font-semibold text-white"
+          className="button-primary w-fit"
           href="/contact"
         >
           Public form
@@ -50,8 +82,20 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         </Link>
       </div>
 
-      <form className="mt-6 grid gap-3 rounded-md border border-line bg-white p-4 sm:grid-cols-[1fr_180px_180px_auto]">
-        <label className="grid gap-2 text-sm font-semibold text-slate-700">
+      <section className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {summaryCards.map((card) => (
+          <article className="neo-panel p-4" key={card.label}>
+            <p className="text-sm font-semibold text-slate-600">{card.label}</p>
+            <p className={`mt-3 text-3xl font-semibold ${card.tone ?? "text-ink"}`}>
+              {card.value}
+            </p>
+            <p className="mt-1 text-sm leading-6 text-slate-600">{card.detail}</p>
+          </article>
+        ))}
+      </section>
+
+      <form className="neo-panel-strong mt-6 grid gap-3 p-4 sm:grid-cols-[1fr_180px_180px_auto]">
+        <label className="field-label">
           Search
           <div className="relative">
             <Search
@@ -59,17 +103,17 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
             />
             <input
-              className="focus-ring min-h-11 w-full rounded-md border border-line bg-white py-2 pl-9 pr-3 text-base"
+              className="field-control py-2 pl-9 pr-3"
               name="q"
               defaultValue={params.q}
               placeholder="Name, service, summary"
             />
           </div>
         </label>
-        <label className="grid gap-2 text-sm font-semibold text-slate-700">
+        <label className="field-label">
           Temperature
           <select
-            className="focus-ring min-h-11 rounded-md border border-line bg-white px-3 text-base"
+            className="field-control"
             name="temperature"
             defaultValue={temperature ?? ""}
           >
@@ -81,10 +125,10 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
             ))}
           </select>
         </label>
-        <label className="grid gap-2 text-sm font-semibold text-slate-700">
+        <label className="field-label">
           Status
           <select
-            className="focus-ring min-h-11 rounded-md border border-line bg-white px-3 text-base"
+            className="field-control"
             name="status"
             defaultValue={status ?? ""}
           >
@@ -97,7 +141,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
           </select>
         </label>
         <button
-          className="focus-ring mt-auto inline-flex min-h-11 items-center justify-center rounded-md bg-teal-700 px-4 text-sm font-semibold text-white"
+          className="button-accent mt-auto min-h-11 px-4"
           type="submit"
         >
           Filter
@@ -107,7 +151,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       <section className="mt-6 grid gap-3 lg:hidden">
         {result.items.map((lead) => (
           <Link
-            className="focus-ring rounded-md border border-line bg-white p-4 shadow-sm"
+            className="focus-ring neo-panel p-4"
             data-testid="lead-link"
             href={`/leads/${lead.id}`}
             key={lead.id}
@@ -134,9 +178,9 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         ))}
       </section>
 
-      <section className="mt-6 hidden overflow-x-auto rounded-md border border-line bg-white lg:block">
+      <section className="neo-panel-strong mt-6 hidden overflow-x-auto lg:block">
         <table className="min-w-full divide-y divide-line text-left">
-          <thead className="bg-paper">
+          <thead className="bg-paper/75">
             <tr>
               <th className="px-4 py-3 text-xs font-semibold uppercase text-slate-600">
                 Lead
@@ -161,7 +205,11 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
           <tbody className="divide-y divide-line">
             {result.items.map((lead) => (
               <tr
-                className={lead.temperature === "hot" ? "bg-red-50/55" : "bg-white"}
+                className={
+                  lead.temperature === "hot"
+                    ? "bg-red-50/70 hover:bg-red-50"
+                    : "bg-surface-strong/80 hover:bg-white/85"
+                }
                 data-testid="lead-row"
                 key={lead.id}
               >
@@ -199,11 +247,15 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       </section>
 
       {result.items.length === 0 ? (
-        <div className="mt-6 rounded-md border border-dashed border-line bg-white p-8 text-center">
+        <div className="neo-panel mt-6 border-dashed p-8 text-center">
           <h2 className="text-lg font-semibold text-ink">No leads match these filters</h2>
           <p className="mt-2 text-sm text-slate-600">
-            New submissions from the public form will appear here.
+            Adjust the filters or open the public form to create a fresh demo lead.
           </p>
+          <Link className="button-secondary mt-5" href="/contact">
+            Open public form
+            <ArrowRight aria-hidden="true" className="h-4 w-4" />
+          </Link>
         </div>
       ) : null}
     </main>

@@ -4,8 +4,25 @@
 
 :root {
   color-scheme: light;
-  --background: #f7f8f6;
-  --foreground: #18212f;
+  --ink: 23 32 43;
+  --paper: 239 236 229;
+  --surface: 247 245 239;
+  --surface-strong: 253 251 246;
+  --line: 211 207 196;
+  --background: #efede6;
+  --foreground: rgb(var(--ink));
+  --shadow-panel: 0 24px 60px rgba(43, 38, 30, 0.11),
+    0 2px 10px rgba(43, 38, 30, 0.06);
+  --shadow-soft: 9px 9px 22px rgba(43, 38, 30, 0.12),
+    -9px -9px 20px rgba(255, 255, 255, 0.78);
+  --shadow-soft-sm: 5px 5px 14px rgba(43, 38, 30, 0.1),
+    -5px -5px 12px rgba(255, 255, 255, 0.76);
+  --shadow-inset: inset 5px 5px 11px rgba(43, 38, 30, 0.1),
+    inset -5px -5px 11px rgba(255, 255, 255, 0.82);
+  --shadow-button: 6px 6px 15px rgba(43, 38, 30, 0.18),
+    -5px -5px 13px rgba(255, 255, 255, 0.7);
+  --shadow-pressed: inset 4px 4px 9px rgba(12, 18, 28, 0.2),
+    inset -3px -3px 8px rgba(255, 255, 255, 0.16);
 }
 
 * {
@@ -21,7 +38,8 @@ body {
   min-height: 100dvh;
   margin: 0;
   background:
-    linear-gradient(180deg, rgba(13, 143, 119, 0.08), transparent 360px),
+    linear-gradient(135deg, rgba(255, 251, 243, 0.94), rgba(232, 230, 219, 0.92)),
+    linear-gradient(180deg, rgba(13, 143, 119, 0.08), transparent 420px),
     var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
@@ -39,9 +57,23 @@ select {
   font: inherit;
 }
 
+button,
+a,
+input,
+textarea,
+select {
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    color 180ms ease,
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
 ::selection {
   background: #d6f7ee;
-  color: #18212f;
+  color: rgb(var(--ink));
 }
 
 .focus-ring {
@@ -50,6 +82,100 @@ select {
 }
 
 .focus-ring:focus-visible {
-  outline-color: #0d8f77;
-  box-shadow: 0 0 0 4px rgba(13, 143, 119, 0.18);
+  outline-color: #087361;
+  box-shadow: 0 0 0 4px rgba(13, 143, 119, 0.22), var(--shadow-soft-sm);
+}
+
+@layer components {
+  .eyebrow {
+    @apply text-xs font-bold uppercase text-teal-700;
+  }
+
+  .neo-panel {
+    @apply rounded-2xl border border-white/80 bg-surface shadow-soft;
+  }
+
+  .neo-panel-strong {
+    @apply rounded-2xl border border-white/85 bg-surface-strong shadow-panel;
+  }
+
+  .neo-inset {
+    @apply rounded-xl border border-line/75 bg-paper shadow-inset;
+  }
+
+  .field-label {
+    @apply grid gap-2 text-sm font-semibold text-slate-700;
+  }
+
+  .field-control {
+    @apply focus-ring min-h-11 w-full rounded-xl border border-line bg-paper px-3 text-base text-ink shadow-inset;
+  }
+
+  .field-control:hover {
+    @apply border-slate-300 bg-surface;
+  }
+
+  .field-control::placeholder {
+    color: #64748b;
+  }
+
+  .button-primary {
+    @apply focus-ring inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-ink px-5 text-sm font-semibold text-white shadow-button;
+  }
+
+  .button-primary:hover {
+    @apply bg-slate-900;
+    transform: translateY(-1px);
+  }
+
+  .button-primary:active {
+    box-shadow: var(--shadow-pressed);
+    transform: translateY(0);
+  }
+
+  .button-primary:disabled {
+    @apply cursor-not-allowed opacity-55;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .button-accent {
+    @apply focus-ring inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-teal-700 px-5 text-sm font-semibold text-white shadow-button;
+  }
+
+  .button-accent:hover {
+    @apply bg-teal-600;
+    transform: translateY(-1px);
+  }
+
+  .button-accent:active {
+    box-shadow: var(--shadow-pressed);
+    transform: translateY(0);
+  }
+
+  .button-secondary {
+    @apply focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/80 bg-surface px-4 text-sm font-semibold text-slate-700 shadow-soft-sm;
+  }
+
+  .button-secondary:hover {
+    @apply border-teal-100 text-ink;
+    transform: translateY(-1px);
+  }
+
+  .button-secondary:active {
+    box-shadow: var(--shadow-inset);
+    transform: translateY(0);
+  }
+
+  .soft-link {
+    @apply font-semibold text-teal-700 underline decoration-teal-700/30 underline-offset-4;
+  }
+
+  .status-callout-success {
+    @apply rounded-xl border border-teal-200 bg-teal-50 p-4 text-sm leading-6 text-teal-950 shadow-soft-sm;
+  }
+
+  .status-callout-error {
+    @apply rounded-xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-950 shadow-soft-sm;
+  }
 }

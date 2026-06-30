@@ -27,7 +27,7 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <Link
-        className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-md border border-line bg-white px-3 text-sm font-semibold text-slate-700"
+        className="button-secondary w-fit"
         href="/dashboard"
       >
         <ArrowLeft aria-hidden="true" className="h-4 w-4" />
@@ -36,10 +36,10 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_360px]">
         <section className="grid gap-6">
-          <div className="rounded-md border border-line bg-white p-5 shadow-sm sm:p-6">
+          <div className="neo-panel-strong p-5 sm:p-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <p className="text-sm font-semibold uppercase text-teal-700">Lead</p>
+                <p className="eyebrow">Lead</p>
                 <h1 className="mt-2 text-3xl font-semibold text-ink">{detail.lead.name}</h1>
                 <p className="mt-2 text-base text-slate-600">
                   {detail.lead.email ?? "No email"} / {detail.lead.phone ?? "No phone"}
@@ -56,14 +56,14 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
             </dl>
 
             {detail.lead.summary ? (
-              <div className="mt-6 rounded-md border border-line bg-paper p-4">
+              <div className="neo-inset mt-6 p-4">
                 <p className="text-sm font-semibold uppercase text-slate-500">Summary</p>
                 <p className="mt-2 text-base leading-7 text-slate-700">{detail.lead.summary}</p>
               </div>
             ) : null}
           </div>
 
-          <section className="rounded-md border border-line bg-white p-5 shadow-sm sm:p-6">
+          <section className="neo-panel-strong p-5 sm:p-6">
             <div className="flex items-center gap-2">
               <MessageSquareText aria-hidden="true" className="h-5 w-5 text-teal-700" />
               <h2 className="text-xl font-semibold text-ink">Conversation</h2>
@@ -71,7 +71,7 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
             <div className="mt-5 grid gap-3">
               {detail.conversations.map((conversation) => (
                 <article
-                  className="rounded-md border border-line bg-paper p-4"
+                  className="neo-inset p-4"
                   key={conversation.id}
                 >
                   <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase text-slate-500">
@@ -87,7 +87,7 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
         </section>
 
         <aside className="grid h-fit gap-6">
-          <section className="rounded-md border border-line bg-white p-5 shadow-sm">
+          <section className="neo-panel-strong p-5">
             <h2 className="text-xl font-semibold text-ink">AI classification</h2>
             {latestClassification ? (
               <div className="mt-4 grid gap-4">
@@ -101,7 +101,7 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
                   label="Suggested next action"
                   value={titleize(latestClassification.suggestedNextAction)}
                 />
-                <div className="rounded-md border border-teal-200 bg-teal-50 p-4">
+                <div className="status-callout-success">
                   <p className="text-sm font-semibold uppercase text-teal-800">
                     Simulated response
                   </p>
@@ -115,14 +115,14 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
             )}
           </section>
 
-          <section className="rounded-md border border-line bg-white p-5 shadow-sm">
+          <section className="neo-panel-strong p-5">
             <div className="flex items-center gap-2">
               <Phone aria-hidden="true" className="h-5 w-5 text-teal-700" />
               <h2 className="text-xl font-semibold text-ink">Follow-up tasks</h2>
             </div>
             <div className="mt-4 grid gap-3">
               {detail.tasks.map((task) => (
-                <article className="rounded-md border border-line bg-paper p-4" key={task.id}>
+                <article className="neo-inset p-4" key={task.id}>
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="font-semibold text-ink">{titleize(task.action)}</p>
@@ -138,7 +138,7 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
                       <input name="leadId" type="hidden" value={detail.lead.id} />
                       <input name="status" type="hidden" value="completed" />
                       <button
-                        className="focus-ring inline-flex min-h-10 items-center gap-2 rounded-md border border-line bg-white px-3 text-sm font-semibold text-slate-700"
+                        className="button-secondary min-h-10 px-3"
                         type="submit"
                       >
                         <CheckCircle2 aria-hidden="true" className="h-4 w-4" />

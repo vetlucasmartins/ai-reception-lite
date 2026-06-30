@@ -5,9 +5,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#18212f",
-        paper: "#f7f8f6",
-        line: "#d9ded8",
+        ink: "rgb(var(--ink) / <alpha-value>)",
+        paper: "rgb(var(--paper) / <alpha-value>)",
+        surface: "rgb(var(--surface) / <alpha-value>)",
+        "surface-strong": "rgb(var(--surface-strong) / <alpha-value>)",
+        line: "rgb(var(--line) / <alpha-value>)",
         teal: {
           50: "#effcf8",
           100: "#d6f7ee",
@@ -26,7 +28,12 @@ const config: Config = {
         }
       },
       boxShadow: {
-        panel: "0 18px 50px rgba(24, 33, 47, 0.10)"
+        panel: "var(--shadow-panel)",
+        soft: "var(--shadow-soft)",
+        "soft-sm": "var(--shadow-soft-sm)",
+        inset: "var(--shadow-inset)",
+        button: "var(--shadow-button)",
+        pressed: "var(--shadow-pressed)"
       }
     }
   },

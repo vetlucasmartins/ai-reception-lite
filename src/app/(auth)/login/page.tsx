@@ -16,7 +16,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   return (
     <main className="mx-auto grid min-h-dvh w-full max-w-6xl items-center gap-10 px-4 py-10 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
       <section>
-        <p className="text-sm font-semibold uppercase text-teal-700">AI Reception Lite</p>
+        <p className="eyebrow">AI Reception Lite</p>
         <h1 className="mt-3 max-w-xl text-4xl font-semibold leading-tight text-ink sm:text-5xl">
           Review qualified leads before they go cold.
         </h1>
@@ -26,13 +26,13 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         </p>
       </section>
 
-      <section className="rounded-md border border-line bg-white p-5 shadow-panel sm:p-8">
+      <section className="neo-panel-strong p-5 sm:p-8">
         <h2 className="text-2xl font-semibold text-ink">Login</h2>
         <form action={signInAction} className="mt-6 grid gap-4">
-          <label className="grid gap-2 text-sm font-semibold text-slate-700">
+          <label className="field-label">
             Email
             <input
-              className="focus-ring min-h-11 rounded-md border border-line px-3 text-base"
+              className="field-control"
               name="email"
               type="email"
               required
@@ -40,10 +40,10 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
               defaultValue={isDemoAuthEnabled() ? DEMO_USER_EMAIL : ""}
             />
           </label>
-          <label className="grid gap-2 text-sm font-semibold text-slate-700">
+          <label className="field-label">
             Password
             <input
-              className="focus-ring min-h-11 rounded-md border border-line px-3 text-base"
+              className="field-control"
               name="password"
               type="password"
               required
@@ -54,18 +54,18 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </label>
 
           {params.error ? (
-            <p className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+            <p className="status-callout-error">
               {params.error}
             </p>
           ) : null}
           {params.message ? (
-            <p className="rounded-md border border-teal-200 bg-teal-50 p-3 text-sm text-teal-800">
+            <p className="status-callout-success">
               {params.message}
             </p>
           ) : null}
 
           <button
-            className="focus-ring inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-ink px-5 text-sm font-semibold text-white"
+            className="button-primary"
             type="submit"
           >
             <LogIn aria-hidden="true" className="h-4 w-4" />
@@ -74,7 +74,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         </form>
         <p className="mt-5 text-sm text-slate-600">
           No account yet?{" "}
-          <Link className="font-semibold text-teal-700 underline" href="/signup">
+          <Link className="soft-link" href="/signup">
             Create one
           </Link>
         </p>

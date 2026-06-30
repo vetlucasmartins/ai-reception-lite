@@ -7,8 +7,8 @@ Thanks for considering a contribution to AI Reception Lite.
 - Keep the product focused on small-business lead capture, qualification, and follow-up.
 - Prefer small, readable changes over broad rewrites.
 - Validate external input at API boundaries.
-- Do not hardcode secrets, API keys, webhook URLs, or credentials.
-- Keep AI behavior structured, testable, and reviewable.
+- Do not hardcode secrets, API keys, or credentials.
+- Keep mock AI behavior structured, testable, and reviewable.
 - Update documentation when behavior, setup, or architecture changes.
 
 ## Development Flow
@@ -27,10 +27,9 @@ Update these files when relevant:
 
 - `README.md` for public overview and quickstart changes
 - `docs/ARCHITECTURE.md` for system design changes
-- `docs/DATA_MODEL.md` and `supabase/schema.sql` for schema changes
+- `docs/DATA_MODEL.md` and `src/lib/data/sqlite-repository.ts` for storage changes
 - `docs/API.md` for API contract changes
-- `docs/AI_PIPELINE.md` for prompt, provider, or classification changes
-- `docs/N8N_WORKFLOW.md` and `n8n/` for automation changes
+- `docs/AI_PIPELINE.md` for classifier or response-draft changes
 
 ## Security
 

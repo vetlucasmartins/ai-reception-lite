@@ -2,14 +2,15 @@ import { Flame, Snowflake, ThermometerSun } from "lucide-react";
 import { cn, titleize } from "@/lib/utils";
 import type { LeadTemperature, TaskStatus } from "@/lib/domain/types";
 
-type BadgeTone = "hot" | "warm" | "cold" | "neutral" | "success";
+type BadgeTone = "hot" | "warm" | "cold" | "neutral" | "success" | "danger";
 
 const toneClasses: Record<BadgeTone, string> = {
-  hot: "border-red-200 bg-red-50 text-red-800",
-  warm: "border-amber-200 bg-amber-50 text-amber-800",
-  cold: "border-blue-200 bg-blue-50 text-blue-800",
-  neutral: "border-slate-200 bg-white text-slate-700",
-  success: "border-teal-200 bg-teal-50 text-teal-800"
+  hot: "border-red-300 bg-red-100 text-red-950",
+  warm: "border-amber-300 bg-amber-100 text-amber-950",
+  cold: "border-blue-300 bg-blue-100 text-blue-950",
+  neutral: "border-slate-300 bg-slate-100 text-slate-800",
+  success: "border-teal-300 bg-teal-100 text-teal-950",
+  danger: "border-red-300 bg-red-50 text-red-900"
 };
 
 export function TemperatureBadge({ value }: { value: LeadTemperature }) {
@@ -30,7 +31,7 @@ export function TemperatureBadge({ value }: { value: LeadTemperature }) {
 }
 
 export function StatusBadge({ value }: { value: string }) {
-  const tone: BadgeTone = value === "completed" || value === "won" ? "success" : "neutral";
+  const tone = resolveStatusTone(value);
 
   return (
     <span
@@ -46,4 +47,24 @@ export function StatusBadge({ value }: { value: string }) {
 
 export function TaskStatusBadge({ value }: { value: TaskStatus }) {
   return <StatusBadge value={value} />;
+}
+
+function resolveStatusTone(value: string): BadgeTone {
+  if (value === "completed" || value === "won") {
+    return "success";
+  }
+
+  if (value === "high" || value === "lost" || value === "cancelled") {
+    return "danger";
+  }
+
+  if (value === "medium" || value === "send_pricing" || value === "send_proposal") {
+    return "warm";
+  }
+
+  if (value === "low" || value === "nurture" || value === "archived") {
+    return "cold";
+  }
+
+  return "neutral";
 }

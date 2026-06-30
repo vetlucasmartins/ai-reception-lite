@@ -1,31 +1,29 @@
 import "server-only";
 
 import {
-  createSafeFailureClassification,
-  FallbackLeadClassifier
+  createFallbackClassification,
+  createSafeFailureClassification
 } from "@/lib/ai/fallback-classifier";
-import { OpenAILeadClassifier } from "@/lib/ai/openai-classifier";
 import {
   parseLeadClassification,
   type LeadClassifier,
   type LeadClassifierInput,
   type LeadClassifierResult
 } from "@/lib/ai/schema";
-import { getAiProvider } from "@/lib/config";
 
-export function getLeadClassifier(): LeadClassifier {
-  const provider = getAiProvider();
-
-  if (provider === "openai" && process.env.OPENAI_API_KEY) {
-    return new OpenAILeadClassifier(process.env.OPENAI_API_KEY);
+const fallbackClassifier: LeadClassifier = {
+  async classify(input) {
+    return {
+      provider: "fallback",
+      model: "heuristic-v1",
+      classification: createFallbackClassification(input)
+    };
   }
-
-  return new FallbackLeadClassifier();
-}
+};
 
 export async function classifyLeadWithFallback(
   input: LeadClassifierInput,
-  classifier: LeadClassifier = getLeadClassifier()
+  classifier: LeadClassifier = fallbackClassifier
 ): Promise<LeadClassifierResult> {
   try {
     const result = await classifier.classify(input);

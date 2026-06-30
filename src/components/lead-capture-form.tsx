@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 
 type LeadCaptureFormProps = {
   businessId: string;
@@ -83,7 +83,7 @@ export function LeadCaptureForm({
       onSubmit={handleSubmit}
     >
       <div>
-        <p className="text-sm font-semibold uppercase text-teal-700">{businessName}</p>
+        <p className="eyebrow">{businessName}</p>
         <h1 className="mt-2 max-w-2xl text-4xl font-semibold leading-tight text-ink sm:text-5xl">
           Send your request to the team.
         </h1>
@@ -96,7 +96,7 @@ export function LeadCaptureForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Name" required>
           <input
-            className="focus-ring min-h-11 w-full rounded-md border border-line bg-white px-3 text-base text-ink"
+            className="field-control"
             name="name"
             required
             autoComplete="name"
@@ -104,7 +104,7 @@ export function LeadCaptureForm({
         </Field>
         <Field label="Email">
           <input
-            className="focus-ring min-h-11 w-full rounded-md border border-line bg-white px-3 text-base text-ink"
+            className="field-control"
             name="email"
             type="email"
             autoComplete="email"
@@ -112,7 +112,7 @@ export function LeadCaptureForm({
         </Field>
         <Field label="Phone">
           <input
-            className="focus-ring min-h-11 w-full rounded-md border border-line bg-white px-3 text-base text-ink"
+            className="field-control"
             name="phone"
             type="tel"
             autoComplete="tel"
@@ -120,7 +120,7 @@ export function LeadCaptureForm({
         </Field>
         <Field label="Service desired">
           <input
-            className="focus-ring min-h-11 w-full rounded-md border border-line bg-white px-3 text-base text-ink"
+            className="field-control"
             list="services"
             name="requestedService"
           />
@@ -134,7 +134,7 @@ export function LeadCaptureForm({
 
       <Field label="Message" required>
         <textarea
-          className="focus-ring min-h-36 w-full resize-y rounded-md border border-line bg-white px-3 py-3 text-base leading-7 text-ink"
+          className="field-control min-h-36 resize-y py-3 leading-7"
           name="message"
           required
           maxLength={2000}
@@ -144,7 +144,7 @@ export function LeadCaptureForm({
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <button
-          className="focus-ring inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-md bg-ink px-5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60 sm:w-fit"
+          className="button-primary w-full sm:w-fit"
           type="submit"
           disabled={state.status === "submitting"}
         >
@@ -153,21 +153,24 @@ export function LeadCaptureForm({
           ) : (
             <ArrowRight aria-hidden="true" className="h-4 w-4" />
           )}
-          Send request
+          {state.status === "submitting" ? "Sending request" : "Send request"}
         </button>
-        <p className="text-sm text-slate-500">Email or phone is required.</p>
+        <p className="text-sm font-medium text-slate-600">Email or phone is required.</p>
       </div>
 
       <div aria-live="polite">
         {state.status === "success" ? (
-          <div className="rounded-md border border-teal-200 bg-teal-50 p-4 text-sm leading-6 text-teal-900">
-            <p className="font-semibold">Simulated AI response</p>
-            <p className="mt-1">{state.response}</p>
-            <p className="mt-2 text-xs">Lead ID: {state.leadId}</p>
+          <div className="status-callout-success">
+            <p className="flex items-center gap-2 font-semibold">
+              <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
+              Simulated AI response
+            </p>
+            <p className="mt-2">{state.response}</p>
+            <p className="mt-3 text-xs font-medium text-teal-900">Lead ID: {state.leadId}</p>
           </div>
         ) : null}
         {state.status === "error" ? (
-          <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-900">
+          <div className="status-callout-error" role="alert">
             {state.message}
           </div>
         ) : null}
@@ -186,7 +189,7 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <label className="grid gap-2 text-sm font-semibold text-slate-700">
+    <label className="field-label">
       <span>
         {label}
         {required ? <span className="text-signal-hot"> *</span> : null}

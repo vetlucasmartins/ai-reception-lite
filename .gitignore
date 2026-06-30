@@ -9,6 +9,12 @@ out/
 dist/
 build/
 
+# Local SQLite demo database
+.data/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
 # Environment files
 .env
 .env.local
@@ -32,7 +38,3 @@ tsconfig.tsbuildinfo
 .DS_Store
 .idea/
 .vscode/
-
-# Supabase local runtime
-supabase/.branches/
-supabase/.temp/

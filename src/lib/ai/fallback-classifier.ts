@@ -1,8 +1,6 @@
 import {
   type LeadClassification,
-  type LeadClassifier,
-  type LeadClassifierInput,
-  type LeadClassifierResult
+  type LeadClassifierInput
 } from "@/lib/ai/schema";
 
 const urgentPattern = /\b(today|tomorrow|this week|urgent|asap|immediately|now|emergency|soon)\b/i;
@@ -88,14 +86,4 @@ function buildResponseDraft(name: string, requestedService: string, action: stri
   }
 
   return `Thanks, ${name}. We received your message about ${requestedService}. Our team will follow up shortly with the next useful information.`;
-}
-
-export class FallbackLeadClassifier implements LeadClassifier {
-  async classify(input: LeadClassifierInput): Promise<LeadClassifierResult> {
-    return {
-      provider: "fallback",
-      model: "heuristic-v1",
-      classification: createFallbackClassification(input)
-    };
-  }
 }

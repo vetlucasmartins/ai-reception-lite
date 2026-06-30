@@ -7,11 +7,9 @@ import { getRepository } from "@/lib/data";
 import {
   DEMO_USER_EMAIL,
   DEMO_USER_ID,
-  hasSupabasePublicEnv,
   isDemoAuthEnabled
 } from "@/lib/config";
 import { demoAuthCookieName, requireUser } from "@/lib/auth/session";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 const authSchema = z.object({
   email: z.string().trim().email(),
@@ -29,41 +27,11 @@ export async function signInAction(formData: FormData) {
     redirect("/login?error=Enter+a+valid+email+and+password");
   }
 
-  if (isDemoAuthEnabled() && parsed.data.email === DEMO_USER_EMAIL) {
-    const cookieStore = await cookies();
-    cookieStore.set(demoAuthCookieName, "1", {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      path: "/"
-    });
-    await getRepository().ensureBusinessForUser({
-      id: DEMO_USER_ID,
-      email: DEMO_USER_EMAIL,
-      fullName: "Demo User"
-    });
-    redirect("/dashboard");
+  if (!isDemoAuthEnabled()) {
+    redirect("/login?error=Demo+login+is+disabled");
   }
 
-  if (!hasSupabasePublicEnv()) {
-    redirect("/login?error=Supabase+is+not+configured");
-  }
-
-  const supabase = await createServerSupabaseClient();
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: parsed.data.email,
-    password: parsed.data.password
-  });
-
-  if (error || !data.user) {
-    redirect("/login?error=Invalid+login+credentials");
-  }
-
-  await getRepository().ensureBusinessForUser({
-    id: data.user.id,
-    email: data.user.email ?? undefined
-  });
-  redirect("/dashboard");
+  await startDemoSession();
 }
 
 export async function signUpAction(formData: FormData) {
@@ -77,51 +45,11 @@ export async function signUpAction(formData: FormData) {
     redirect("/signup?error=Enter+valid+signup+details");
   }
 
-  if (isDemoAuthEnabled() && parsed.data.email === DEMO_USER_EMAIL) {
-    const cookieStore = await cookies();
-    cookieStore.set(demoAuthCookieName, "1", {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      path: "/"
-    });
-    await getRepository().ensureBusinessForUser({
-      id: DEMO_USER_ID,
-      email: DEMO_USER_EMAIL,
-      fullName: "Demo User"
-    });
-    redirect("/dashboard");
+  if (!isDemoAuthEnabled()) {
+    redirect("/signup?error=Demo+signup+is+disabled");
   }
 
-  if (!hasSupabasePublicEnv()) {
-    redirect("/signup?error=Supabase+is+not+configured");
-  }
-
-  const supabase = await createServerSupabaseClient();
-  const { data, error } = await supabase.auth.signUp({
-    email: parsed.data.email,
-    password: parsed.data.password,
-    options: {
-      data: {
-        full_name: parsed.data.fullName
-      }
-    }
-  });
-
-  if (error || !data.user) {
-    redirect("/signup?error=Could+not+create+account");
-  }
-
-  if (!data.session) {
-    redirect("/login?message=Check+your+email+to+confirm+the+account");
-  }
-
-  await getRepository().ensureBusinessForUser({
-    id: data.user.id,
-    email: data.user.email ?? undefined,
-    fullName: parsed.data.fullName
-  });
-  redirect("/dashboard");
+  await startDemoSession(parsed.data.fullName);
 }
 
 export async function logoutAction() {
@@ -129,11 +57,6 @@ export async function logoutAction() {
 
   if (cookieStore.get(demoAuthCookieName)) {
     cookieStore.delete(demoAuthCookieName);
-  }
-
-  if (hasSupabasePublicEnv()) {
-    const supabase = await createServerSupabaseClient();
-    await supabase.auth.signOut();
   }
 
   redirect("/login");
@@ -156,4 +79,20 @@ export async function updateTaskStatusAction(formData: FormData) {
 
   const leadId = String(formData.get("leadId") ?? "");
   redirect(leadId ? `/leads/${leadId}` : "/dashboard");
+}
+
+async function startDemoSession(fullName = "Demo User") {
+  const cookieStore = await cookies();
+  cookieStore.set(demoAuthCookieName, "1", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/"
+  });
+  await getRepository().ensureBusinessForUser({
+    id: DEMO_USER_ID,
+    email: DEMO_USER_EMAIL,
+    fullName
+  });
+  redirect("/dashboard");
 }

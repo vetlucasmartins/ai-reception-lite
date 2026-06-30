@@ -8,7 +8,6 @@ import {
 } from "@/lib/ai/schema";
 import { getRepository } from "@/lib/data";
 import type { DataRepository } from "@/lib/data/repository";
-import type { Conversation } from "@/lib/domain/types";
 import { publicLeadSchema, type PublicLeadInput } from "@/lib/leads/validation";
 import { createFollowUpTaskDraft } from "@/lib/tasks/service";
 import { notifyHotLead } from "@/lib/webhooks/hot-lead";
@@ -56,7 +55,7 @@ export async function createLeadFromPublicInput(
   await repository.createConversation({
     leadId: lead.id,
     direction: "inbound",
-    channel: toConversationChannel(input.source),
+    channel: input.source,
     body: input.message
   });
 
@@ -122,8 +121,4 @@ function toClassifierInput(
       message: input.message
     }
   };
-}
-
-function toConversationChannel(source: PublicLeadInput["source"]): Conversation["channel"] {
-  return source;
 }

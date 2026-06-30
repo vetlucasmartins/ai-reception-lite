@@ -1,7 +1,10 @@
+// @vitest-environment node
+
 import { beforeEach, describe, expect, it } from "vitest";
 import { DEMO_BUSINESS_ID, DEMO_USER_ID } from "@/lib/config";
 import type { LeadClassifier } from "@/lib/ai/schema";
-import { memoryRepository, resetMemoryRepository } from "@/lib/data/memory-repository";
+import { createSqliteRepository } from "@/lib/data/sqlite-repository";
+import type { DataRepository } from "@/lib/data/repository";
 import { createLeadFromPublicInput } from "@/lib/leads/service";
 
 const throwingClassifier: LeadClassifier = {
@@ -23,8 +26,10 @@ const invalidClassifier: LeadClassifier = {
 };
 
 describe("createLeadFromPublicInput", () => {
+  let repository: DataRepository;
+
   beforeEach(() => {
-    resetMemoryRepository();
+    repository = createSqliteRepository({ databasePath: ":memory:" });
   });
 
   it("saves the lead, conversation, safe classification, and task when AI fails", async () => {
@@ -38,7 +43,7 @@ describe("createLeadFromPublicInput", () => {
         source: "website"
       },
       {
-        repository: memoryRepository,
+        repository,
         classifier: throwingClassifier
       }
     );
@@ -46,14 +51,11 @@ describe("createLeadFromPublicInput", () => {
     expect(result.status).toBe("received");
     expect(result.simulatedResponse).toContain("Thanks, Alex Morgan");
 
-    const leads = await memoryRepository.listLeadsForUser(DEMO_USER_ID, {});
-    expect(leads.items).toHaveLength(1);
-    expect(leads.items[0]?.temperature).toBe("warm");
+    const leads = await repository.listLeadsForUser(DEMO_USER_ID, {});
+    const createdLead = leads.items.find((lead) => lead.id === result.leadId);
+    expect(createdLead?.temperature).toBe("warm");
 
-    const detail = await memoryRepository.getLeadDetailForUser(
-      DEMO_USER_ID,
-      result.leadId
-    );
+    const detail = await repository.getLeadDetailForUser(DEMO_USER_ID, result.leadId);
     expect(detail?.conversations).toHaveLength(1);
     expect(detail?.classifications[0]?.model).toBe("safe-failure-v1");
     expect(detail?.tasks[0]?.action).toBe("ask_more_information");
@@ -70,15 +72,12 @@ describe("createLeadFromPublicInput", () => {
         source: "website"
       },
       {
-        repository: memoryRepository,
+        repository,
         classifier: invalidClassifier
       }
     );
 
-    const detail = await memoryRepository.getLeadDetailForUser(
-      DEMO_USER_ID,
-      result.leadId
-    );
+    const detail = await repository.getLeadDetailForUser(DEMO_USER_ID, result.leadId);
 
     expect(detail?.classifications[0]?.provider).toBe("fallback");
     expect(detail?.classifications[0]?.model).toBe("safe-failure-v1");

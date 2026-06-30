@@ -1,7 +1,7 @@
 {
   "name": "ai-reception-lite",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "description": "Open-source AI receptionist MVP for small-business lead capture, qualification, and follow-up.",
   "license": "MIT",
   "scripts": {
@@ -15,8 +15,6 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.12.0",
-    "@supabase/supabase-js": "^2.108.2",
     "clsx": "^2.1.1",
     "lucide-react": "^1.22.0",
     "next": "^16.2.9",

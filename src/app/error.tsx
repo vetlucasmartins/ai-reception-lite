@@ -15,7 +15,7 @@ export default function ErrorPage({
         if you are running locally.
       </p>
       <button
-        className="focus-ring mt-8 inline-flex min-h-11 w-fit items-center justify-center rounded-md bg-ink px-4 text-sm font-semibold text-white"
+        className="button-primary mt-8 w-fit"
         type="button"
         onClick={reset}
       >

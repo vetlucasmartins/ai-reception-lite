@@ -28,7 +28,7 @@ export default defineConfig({
     reuseExistingServer: false,
     timeout: 120000,
     env: {
-      AI_RECEPTION_STORAGE: "memory",
+      AI_RECEPTION_DB_PATH: ".data/e2e.sqlite",
       DEMO_AUTH_ENABLED: "true",
       NEXT_PUBLIC_APP_URL: "http://127.0.0.1:3000"
     }
