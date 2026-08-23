@@ -133,6 +133,16 @@ See [SECURITY.md](SECURITY.md) for the full security notes.
 - The app should not be used for real customer data without replacing the demo
   auth, persistence, authorization, and AI layers.
 
+## Built by LookADev
+
+This is a working prototype of an **AI receptionist for small businesses**, built by [LookADev](https://lookadev.com), a software & AI automation studio.
+
+Small shops lose enquiries every day because nobody follows up the moment a raw contact lands. This demo turns a website enquiry into a qualified lead, a first task, and a clear next action, without a human touching it.
+
+If your business has the same gap, we build the production version around your stack, your calendar, and your WhatsApp: lead capture, triage, and automated follow-up, delivered fast.
+
+**[Start a project → lookadev.com](https://lookadev.com)** · **Email: lucas@lookadev.com**
+
 ## License
 
 MIT
